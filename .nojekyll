@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mathematics Excellence Test</title>
+    <style>
+        :root {
+            --primary: #0C4B33; /* Deep emerald */
+            --secondary: #D4AF37; /* Gold */
+            --accent: #E31837; /* Ruby red */
+            --background: #FAFAFA;
+            --correct: #2ECC71; /* Emerald */
+            --incorrect: #E74C3C; /* Alizarin */
+            --text-dark: #2C3E50;
+            --text-light: #FFFFFF;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Playfair Display', serif;
+            background: url('https://images.unsplash.com/photo-1635070041078-e363dbe005cb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80') center/cover no-repeat fixed;
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.85);
+            z-index: -1;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .container::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100px;
+            height: 100px;
+            background: var(--secondary);
+            transform: rotate(45deg) translate(40px, -60px);
+            opacity: 0.1;
+        }
+
+        h1, h2, h3 {
+            color: var(--primary);
+            margin-top: 0;
+            font-weight: 700;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            text-align: center;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--secondary);
+        }
+
+        .timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: var(--secondary);
+            color: var(--text-dark);
+            padding: 10px 20px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            border: 2px solid white;
+        }
+
+        .question-box {
+            margin: 25px 0;
+            padding: 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--secondary);
+            position: relative;
+        }
+
+        .question-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 20px;
+        }
+
+        .options label {
+            display: flex;
+            align-items: center;
+            padding: 15px 20px;
+            background: rgba(212, 175, 55, 0.08);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            min-height: 50px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .options label:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        .options label::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+            transition: 0.5s;
+        }
+
+        .options label:hover::before {
+            left: 100%;
+        }
+
+        button {
+            background: linear-gradient(to right, var(--secondary), #C9B037);
+            color: var(--text-dark);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            margin: 30px auto 10px;
+            transition: all 0.3s ease;
+            display: block;
+            width: 250px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(212, 175, 55, 0.4);
+        }
+
+        button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -60%;
+            width: 200%;
+            height: 200%;
+            background: rgba(255, 255, 255, 0.2);
+            transform: rotate(30deg);
+            transition: all 0.3s;
+        }
+
+        button:hover::after {
+            left: 100%;
+        }
+
+        .correct { 
+            background: var(--correct) !important;
+            border-color: var(--correct) !important;
+            color: white;
+        }
+
+        .incorrect { 
+            background: var(--incorrect) !important; 
+            border-color: var(--incorrect) !important;
+            color: white;
+        }
+
+        .results {
+            background: rgba(0, 0, 0, 0.03);
+            padding: 25px;
+            border-radius: 12px;
+            margin-top: 30px;
+            text-align: center;
+            border-top: 3px solid var(--secondary);
+        }
+
+        .score-display {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin: 10px 0;
+        }
+
+        .percentage {
+            font-size: 1.8rem;
+            color: var(--secondary);
+            margin-bottom: 15px;
+        }
+
+        .test-completed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            flex-direction: column;
+            color: var(--text-dark);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .teacher-portal {
+            display: none;
+            background: rgba(255, 255, 255, 0.98);
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .teacher-results table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: rgba(255, 255, 255, 0.9);
+        }
+
+        .teacher-results th, .teacher-results td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .teacher-results th {
+            background: linear-gradient(to right, var(--primary), #0C5C40);
+            color: white;
+        }
+
+        .teacher-results tr:nth-child(even) {
+            background: rgba(212, 175, 55, 0.05);
+        }
+
+        .teacher-login {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .teacher-login input {
+            width: 200px;
+            margin: 10px auto;
+        }
+
+        .export-buttons {
+            margin-top: 20px;
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+        }
+
+        .math-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><text x="10" y="60" font-family="Arial" font-size="20" fill="rgba(12,75,51,0.05)">∫ ∑ π ∞ Δ ∇ ∏ √</text></svg>');
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .resume-notice {
+            background: #F59E0B;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: center;
+        }
+        
+        .close-results {
+            background: var(--primary);
+            color: white;
+            margin-top: 20px;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .options label {
+                padding: 12px 15px;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            .teacher-results table {
+                display: block;
+                overflow-x: auto;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="math-pattern"></div>
+
+    <div id="resumeAlert" class="resume-notice container" style="display: none;">
+        <h3>Incomplete Test Found!</h3>
+        <p>We found an incomplete test in progress. Would you like to resume?</p>
+        <div style="display: flex; gap: 10px; justify-content: center;">
+            <button onclick="resumeTest()">Resume Test</button>
+            <button onclick="clearSavedTest()" style="background: #E31837;">Start New Test</button>
+        </div>
+    </div>
+
+    <div class="registration" id="registration">
+        <div class="container">
+            <h1>Mathematics Excellence Test</h1>
+            <div class="teacher-login">
+                <h3 style="color: var(--secondary);">Teacher Portal</h3>
+                <input type="password" id="teacherPassword" placeholder="Enter access code">
+                <button onclick="showTeacherPortal()" style="background: var(--primary); color: white;">View Results</button>
+            </div>
+            <p style="font-size: 1.1rem; margin-top: 30px; color: var(--primary);">Student Registration:</p>
+            <input type="text" id="name" placeholder="Full Name" required>
+            <input type="tel" id="phone" placeholder="Phone Number" required>
+            <button onclick="startTest()" style="margin-top: 20px;">Begin Examination</button>
+        </div>
+    </div>
+
+    <div class="container" id="testContainer" style="display: none;">
+        <div class="timer" id="timer">05:00</div>
+        <h2>Mathematics Test</h2>
+        <p style="color: var(--primary);">You have 5 minutes to complete 10 questions. Good luck!</p>
+        
+        <div id="questions"></div>
+        <button onclick="submitTest()" id="submitBtn">Submit Answers</button>
+    </div>
+
+    <div id="completedScreen" class="test-completed" style="display: none;">
+        <h2 style="color: var(--primary);">Test Submitted Successfully!</h2>
+        <div id="finalScore"></div>
+        <div id="resultDetails" style="max-width: 600px; margin: 20px auto;"></div>
+        <button class="close-results" onclick="location.reload()">Return to Home</button>
+    </div>
+
+    <div class="teacher-portal" id="teacherPortal" style="display: none;">
+        <div class="container">
+            <h2>Teacher Results Portal</h2>
+            <div class="export-buttons">
+                <button onclick="exportCSV()">Export as CSV</button>
+                <button onclick="clearResults()">Clear All Results</button>
+            </div>
+            <div class="teacher-results" id="teacherResults"></div>
+            <button onclick="location.reload()">Return to Home</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                question: "What is the value of 15 + 27 − 8?",
+                options: ["30", "34", "40", "44"],
+                correct: 1
+            },
+            {
+                question: "Solve for x in the equation 3x + 5 = 20.",
+                options: ["3", "5", "7", "10"],
+                correct: 1
+            },
+            {
+                question: "What is the area of a rectangle with length 8 cm and width 5 cm?",
+                options: ["13 cm²", "30 cm²", "40 cm²", "45 cm²"],
+                correct: 2
+            },
+            {
+                question: "Simplify 12/18 to its lowest terms.",
+                options: ["1/2", "2/3", "3/4", "6/9"],
+                correct: 1
+            },
+            {
+                question: "What is 25% of 200?",
+                options: ["25", "50", "75", "100"],
+                correct: 1
+            },
+            {
+                question: "Evaluate 2⁴.",
+                options: ["8", "16", "32", "64"],
+                correct: 1
+            },
+            {
+                question: "If a book costs $12 and a pen costs $3, how much do 2 books and 4 pens cost together?",
+                options: ["$24", "$30", "$36", "$42"],
+                correct: 2
+            },
+            {
+                question: "What is the greatest common divisor (GCD) of 24 and 36?",
+                options: ["6", "12", "18", "24"],
+                correct: 1
+            },
+            {
+                question: "A fair six-sided die is rolled. What is the probability of getting an even number?",
+                options: ["1/6", "1/3", "1/2", "2/3"],
+                correct: 2
+            },
+            {
+                question: "What is the derivative of f(x) = 5x³ + 2x − 7 with respect to x?",
+                options: ["5x² + 2", "15x² + 2", "15x³ + 2x", "10x + 2"],
+                correct: 1
+            }
+        ];
+
+        // Teacher password (change this)
+        const TEACHER_PASSWORD = "math123";
+
+        let userAnswers = Array(questions.length).fill(null);
+        let timeLeft = 300; // 5 minutes in seconds
+        let timerId;
+        let testStarted = false;
+        let testSubmitted = false;
+
+        // Auto-save functions
+        function autoSaveProgress() {
+            const saveData = {
+                answers: userAnswers,
+                timeLeft: timeLeft,
+                testStarted: testStarted,
+                name: document.getElementById('name').value.trim(),
+                phone: document.getElementById('phone').value.trim()
+            };
+            localStorage.setItem('testAutoSave', JSON.stringify(saveData));
+        }
+
+        function checkSavedTest() {
+            const savedData = localStorage.getItem('testAutoSave');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+                if (data.testStarted && !data.answers.every(a => a !== null)) {
+                    document.getElementById('resumeAlert').style.display = 'block';
+                    document.getElementById('registration').style.display = 'none';
+                }
+            }
+        }
+
+        function resumeTest() {
+            const savedData = JSON.parse(localStorage.getItem('testAutoSave'));
+            userAnswers = savedData.answers;
+            timeLeft = savedData.timeLeft;
+            document.getElementById('name').value = savedData.name;
+            document.getElementById('phone').value = savedData.phone;
+            
+            document.getElementById('registration').style.display = 'none';
+            document.getElementById('testContainer').style.display = 'block';
+            document.getElementById('resumeAlert').style.display = 'none';
+            
+            if (savedData.testStarted) {
+                testStarted = true;
+                timerId = setInterval(updateTimer, 1000);
+                setupSecurity();
+                updateTimerDisplay();
+            }
+            
+            renderQuestions();
+            
+            // Restore answers
+            userAnswers.forEach((answer, index) => {
+                if (answer !== null) {
+                    const input = document.querySelector(`input[name="q${index}"][value="${answer}"]`);
+                    if (input) input.checked = true;
+                }
+            });
+        }
+
+        function clearSavedTest() {
+            localStorage.removeItem('testAutoSave');
+            document.getElementById('resumeAlert').style.display = 'none';
+            document.getElementById('registration').style.display = 'block';
+        }
+
+        function startTest() {
+            const name = document.getElementById('name').value.trim();
+            const phone = document.getElementById('phone').value.trim();
+            
+            if (!name || !phone) {
+                alert('Please enter both your name and phone number');
+                return;
+            }
+
+            localStorage.removeItem('testAutoSave');
+            document.getElementById('registration').style.display = 'none';
+            document.getElementById('testContainer').style.display = 'block';
+            
+            // Start timer after 5 seconds
+            setTimeout(() => {
+                testStarted = true;
+                timerId = setInterval(updateTimer, 1000);
+                setupSecurity();
+                autoSaveProgress();
+            }, 5000);
+
+            renderQuestions();
+        }
+
+        function updateTimer() {
+            timeLeft--;
+            autoSaveProgress();
+            
+            if (timeLeft <= 0) {
+                submitTest();
+            }
+            updateTimerDisplay();
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(timeLeft / 60).toString().padStart(2, '0');
+            const seconds = (timeLeft % 60).toString().padStart(2, '0');
+            document.getElementById('timer').textContent = `${minutes}:${seconds}`;
+
+            if (timeLeft <= 30) {
+                document.getElementById('timer').style.background = '#EF4444';
+            }
+        }
+
+        function setupSecurity() {
+            // Tab switch detection
+            document.addEventListener('visibilitychange', () => {
+                if (document.hidden && testStarted && !testSubmitted) {
+                    alert('Test submitted because you switched tabs');
+                    submitTest();
+                }
+            });
+
+            // Window blur detection
+            window.addEventListener('blur', () => {
+                if (testStarted && !testSubmitted) {
+                    alert('Test submitted because you left the test window');
+                    submitTest();
+                }
+            });
+
+            // Prevent context menu
+            document.addEventListener('contextmenu', e => e.preventDefault());
+
+            // Prevent keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                if ((e.ctrlKey || e.metaKey) && testStarted && !testSubmitted) {
+                    e.preventDefault();
+                }
+            });
+        }
+
+        function renderQuestions() {
+            const container = document.getElementById('questions');
+            container.innerHTML = '';
+            questions.forEach((q, i) => {
+                const div = document.createElement('div');
+                div.className = 'question-box';
+                div.innerHTML = `
+                    <h3>Question ${i+1}: ${q.question}</h3>
+                    <div class="options" id="q${i}">
+                        ${q.options.map((opt, j) => `
+                            <label>
+                                <input type="radio" name="q${i}" value="${j}" onchange="saveAnswer(${i}, ${j})">
+                                ${String.fromCharCode(65 + j)}) ${opt}
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                container.appendChild(div);
+            });
+        }
+
+        function saveAnswer(questionIndex, answerIndex) {
+            userAnswers[questionIndex] = answerIndex;
+            autoSaveProgress();
+        }
+
+        function submitTest() {
+            if (testSubmitted) return;
+            testSubmitted = true;
+            
+            const {score, percentage} = calculateScore();
+            
+            // Save results to localStorage
+            const resultData = {
+                name: document.getElementById('name').value.trim(),
+                phone: document.getElementById('phone').value.trim(),
+                score: score,
+                percentage: percentage,
+                timestamp: new Date().toISOString(),
+                answers: userAnswers
+            };
+
+            const allResults = JSON.parse(localStorage.getItem('mathTestResults') || '[]');
+            allResults.push(resultData);
+            localStorage.setItem('mathTestResults', JSON.stringify(allResults));
+
+            clearInterval(timerId);
+            testStarted = false;
+            
+            // Remove event listeners
+            window.removeEventListener('blur', submitTest);
+            document.removeEventListener('visibilitychange', submitTest);
+            
+            // Disable submit button
+            document.getElementById('submitBtn').disabled = true;
+            
+            // Show results
+            document.getElementById('testContainer').style.display = 'none';
+            showCompletionScreen();
+            
+            // Clear saved data
+            localStorage.removeItem('testAutoSave');
+        }
+
+        function calculateScore() {
+            // Collect any unanswered questions
+            questions.forEach((_, i) => {
+                const selected = document.querySelector(`input[name="q${i}"]:checked`);
+                if (selected) {
+                    userAnswers[i] = parseInt(selected.value);
+                }
+            });
+
+            const score = userAnswers.reduce((acc, ans, i) => 
+                acc + (ans === questions[i].correct ? 1 : 0), 0);
+            const percentage = (score / questions.length * 100).toFixed(1);
+            
+            return {score, percentage};
+        }
+
+        function showCompletionScreen() {
+            const {score, percentage} = calculateScore();
+            
+            document.getElementById('finalScore').innerHTML = `
+                <div class="score-display">${score}/${questions.length}</div>
+                <div class="percentage">${percentage}%</div>
+            `;
+            
+            // Show detailed results
+            let details = '<div class="results"><h3>Your Answers:</h3>';
+            questions.forEach((q, i) => {
+                const correct = userAnswers[i] === q.correct;
+                details += `
+                    <div class="question-box" style="text-align: left;">
+                        <h4>Q${i+1}: ${q.question}</h4>
+                        <p>Your answer: <strong>${userAnswers[i] !== null ? 
+                            String.fromCharCode(65 + userAnswers[i]) + ') ' + q.options[userAnswers[i]] : 
+                            'Not answered'}</strong></p>
+                        <p style="color: ${correct ? 'var(--correct)' : 'var(--incorrect)'}">
+                            ${correct ? '✓ Correct' : '✗ Correct answer: ' + String.fromCharCode(65 + q.correct) + ') ' + q.options[q.correct]}
+                        </p>
+                    </div>
+                `;
+            });
+            details += '</div>';
+            document.getElementById('resultDetails').innerHTML = details;
+            
+            document.getElementById('completedScreen').style.display = 'flex';
+        }
+
+        function showTeacherPortal() {
+            const password = document.getElementById('teacherPassword').value;
+            if(password !== TEACHER_PASSWORD) {
+                alert("Incorrect password");
+                return;
+            }
+
+            document.getElementById('registration').style.display = 'none';
+            document.getElementById('teacherPortal').style.display = 'block';
+            displayResults();
+        }
+
+        function displayResults() {
+            const results = JSON.parse(localStorage.getItem('mathTestResults') || '[]');
+            const table = document.createElement('table');
+            
+            // Table header
+            table.innerHTML = `
+                <tr>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Score</th>
+                    <th>Percentage</th>
+                    <th>Date</th>
+                    <th>Details</th>
+                </tr>
+            `;
+
+            // Table rows
+            results.forEach(result => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${result.name}</td>
+                    <td>${result.phone}</td>
+                    <td>${result.score}/10</td>
+                    <td>${result.percentage}%</td>
+                    <td>${new Date(result.timestamp).toLocaleString()}</td>
+                    <td><button onclick="showDetails('${result.timestamp}')">View</button></td>
+                `;
+                table.appendChild(row);
+            });
+
+            document.getElementById('teacherResults').innerHTML = '';
+            document.getElementById('teacherResults').appendChild(table);
+        }
+
+        function showDetails(timestamp) {
+            const results = JSON.parse(localStorage.getItem('mathTestResults') || '[]');
+            const result = results.find(r => r.timestamp === timestamp);
+            const questions = [
+                {
+                    question: "What is the value of 15 + 27 − 8?",
+                    options: ["30", "34", "40", "44"],
+                    correct: 1
+                },
+                // ... include all questions here ...
+            ];
+            
+            let details = `Name: ${result.name}\nPhone: ${result.phone}\nScore: ${result.score}/10 (${result.percentage}%)\n\n`;
+            result.answers.forEach((answer, index) => {
+                const correct = answer === questions[index].correct;
+                const questionText = questions[index].question.substring(0, 30) + (questions[index].question.length > 30 ? "..." : "");
+                details += `Q${index+1}: ${questionText}\n`;
+                details += `Your answer: ${answer !== null ? String.fromCharCode(65 + answer) : 'None'} (${correct ? '✓ Correct' : '✗ Incorrect'})\n\n`;
+            });
+            
+            alert(details);
+        }
+
+        function exportCSV() {
+            const results = JSON.parse(localStorage.getItem('mathTestResults') || '[]');
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "Name,Phone,Score,Percentage,Date\n";
+            
+            results.forEach(result => {
+                csvContent += `"${result.name}","${result.phone}",${result.score},${result.percentage},${result.timestamp}\n`;
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "math_test_results.csv");
+            document.body.appendChild(link);
+            link.click();
+        }
+
+        function clearResults() {
+            if(confirm("Are you sure you want to delete all results?")) {
+                localStorage.removeItem('mathTestResults');
+                displayResults();
+            }
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', checkSavedTest);
+    </script>
+</body>
+</html>
